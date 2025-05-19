@@ -121,11 +121,6 @@
             transform: translateY(-2px);
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.8rem;
-        }
-
         #main-content {
             flex: 1;
             width: 100%;
@@ -201,9 +196,6 @@
             padding: 20px;
             color: white;
             z-index: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
         }
 
         .card-title {
@@ -215,12 +207,6 @@
         .card-text {
             font-size: 0.85rem;
             opacity: 0.9;
-        }
-
-        .card-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 5px;
         }
 
         .loading-indicator {
@@ -426,37 +412,24 @@
     </footer>
 
     <script>
-        let ws = null;
+        const ws = new WebSocket('wss://worker-cctv.pptik.id');
+        const topics = ['CAM-P016', 'CAM-P019', 'CAM-P097', 'CAM-P011'];
         const imageContainers = {};
         const loadingOverlay = document.getElementById('loading-overlay');
         const refreshBtn = document.getElementById('refresh-btn');
         const imagesContainer = document.getElementById('images-container');
 
-        // Fungsi untuk mengambil data perangkat dari API
-        async function fetchDevices() {
-            const url = 'https://api-iot-device.lskk.co.id/v1/devices/by-type-company?companyGuid=COMPANY-2b19d770-ac09-422e-b76f-9db22351b69d-2025&type=Camera';
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                if (data.success) return data.data;
-                throw new Error('Gagal mengambil data perangkat');
-            } catch (error) {
-                console.error('Error:', error);
-                return [];
-            }
-        }
-
-        // Inisialisasi kartu CCTV berdasarkan data API
-        function initializeCards(devices) {
+        // Initialize the UI with placeholder cards
+        function initializeCards() {
             imagesContainer.innerHTML = '';
-            devices.forEach(device => {
+            topics.forEach(topic => {
                 const card = document.createElement('div');
                 card.className = 'image-card';
-                card.id = `card-${device.deviceGuid}`;
+                card.id = `card-${topic}`;
                 
                 const img = document.createElement('img');
                 img.src = 'placeholder.jpg';
-                img.alt = device.name;
+                img.alt = `Kamera ${topic}`;
                 
                 const loading = document.createElement('div');
                 loading.className = 'loading-indicator active';
@@ -465,96 +438,98 @@
                 const overlay = document.createElement('div');
                 overlay.className = 'card-overlay';
                 overlay.innerHTML = `
-                    <div>
-                        <div class="card-title">${device.name}</div>
-                        <div class="card-text">${device.latitude}, ${device.longitude}</div>
-                    </div>
-                    
+                    <div class="card-title">${topic}</div>
+                    <div class="card-text">Memuat gambar...</div>
                 `;
                 
-                card.append(img, loading, overlay);
+                card.appendChild(img);
+                card.appendChild(loading);
+                card.appendChild(overlay);
                 imagesContainer.appendChild(card);
                 
-                imageContainers[device.deviceGuid] = {
+                imageContainers[topic] = {
                     container: card,
                     img: img,
                     loading: loading,
-                    overlay: overlay,
-                    deviceName: device.name
+                    overlay: overlay
                 };
             });
         }
 
-        // Update kartu dengan gambar terbaru
+        // Update a card with new image data
         function updateCard(topic, imageUrl, timestamp) {
             const container = imageContainers[topic];
             if (!container) return;
             
             container.loading.classList.add('active');
-            container.img.onload = () => {
+            container.img.onload = function() {
                 container.loading.classList.remove('active');
                 container.overlay.innerHTML = `
-                    <div>
-                        <div class="card-title">${container.deviceName}</div>
-                        <div class="card-text">Diperbarui: ${timestamp}</div>
-                    </div>
-                    
+                    <div class="card-title">${topic}</div>
+                    <div class="card-text">Diperbarui: ${timestamp}</div>
                 `;
+                if (loadingOverlay.classList.contains('active')) {
+                    loadingOverlay.classList.remove('active');
+                }
             };
-            container.img.src = `${imageUrl}?t=${new Date().getTime()}`;
+            container.img.src = `${imageUrl}?timestamp=${new Date().getTime()}`;
         }
-// <div class="card-actions">
-                    //     <a href="https://live-lens.pptik.id/detail/${topic}" class="btn btn-primary btn-sm">Detail</a>
-                    // </div>
-        // Koneksi WebSocket
-        function connectWebSocket(devices) {
-            if (ws) ws.close();
-            
+
+        // Handle WebSocket connection
+        function connectWebSocket() {
             loadingOverlay.classList.add('active');
-            ws = new WebSocket('wss://worker-cctv.pptik.id');
             
-            ws.onopen = () => {
-                devices.forEach(device => {
-                    ws.send(JSON.stringify({ 
-                        action: 'subscribe', 
-                        topic: device.deviceGuid 
-                    }));
+            ws.onopen = function() {
+                console.log('WebSocket connection opened');
+                topics.forEach(topic => {
+                    ws.send(JSON.stringify({ action: 'subscribe', topic: topic }));
                 });
-                loadingOverlay.classList.remove('active');
             };
 
-            ws.onmessage = (event) => {
+            ws.onmessage = function(event) {
                 const payload = JSON.parse(event.data);
-                updateCard(
-                    payload.guid_device,
-                    `https://smartparking.pptik.id/data/data/${payload.value}`,
-                    payload.datetime
-                );
+                const guidDevice = payload.guid_device;
+                const timestamp = payload.datetime;
+                const imageUrl = `https://smartparking.pptik.id/data/data/${payload.value}`;
+                
+                updateCard(guidDevice, imageUrl, timestamp);
             };
 
-            ws.onclose = () => setTimeout(() => connectWebSocket(devices), 5000);
-            ws.onerror = (error) => console.error('WebSocket Error:', error);
+            ws.onclose = function() {
+                console.log('WebSocket connection closed');
+                // Attempt to reconnect after 5 seconds
+                setTimeout(connectWebSocket, 5000);
+            };
+
+            ws.onerror = function(error) {
+                console.error('WebSocket error:', error);
+            };
         }
 
-        // Refresh data dan tampilan
-        async function refreshData() {
+        // Refresh all images
+        function refreshImages() {
             loadingOverlay.classList.add('active');
-            try {
-                const devices = await fetchDevices();
-                if (devices.length === 0) throw new Error('Tidak ada perangkat ditemukan');
-                initializeCards(devices);
-                connectWebSocket(devices);
-            } catch (error) {
-                console.error('Refresh Error:', error);
-                loadingOverlay.querySelector('.loading-text').textContent = error.message;
-            }
+            topics.forEach(topic => {
+                const container = imageContainers[topic];
+                if (container) {
+                    container.img.src = `${container.img.src.split('?')[0]}?timestamp=${new Date().getTime()}`;
+                    container.loading.classList.add('active');
+                }
+            });
         }
 
-        // Inisialisasi awal
-        document.addEventListener('DOMContentLoaded', refreshData);
-        refreshBtn.addEventListener('click', refreshData);
-    </script>
+        // Initialize the app
+        function initApp() {
+            initializeCards();
+            connectWebSocket();
+            
+            // Add event listeners
+            refreshBtn.addEventListener('click', refreshImages);
+        }
 
+        // Start the app
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 </body>
 
 </html>

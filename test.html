@@ -469,7 +469,9 @@
                         <div class="card-title">${device.name}</div>
                         <div class="card-text">${device.latitude}, ${device.longitude}</div>
                     </div>
-                    
+                    <div class="card-actions">
+                        <a href="https://live-lens.pptik.id/detail/${device.deviceGuid}" class="btn btn-primary btn-sm">Detail</a>
+                    </div>
                 `;
                 
                 card.append(img, loading, overlay);
@@ -498,14 +500,14 @@
                         <div class="card-title">${container.deviceName}</div>
                         <div class="card-text">Diperbarui: ${timestamp}</div>
                     </div>
-                    
+                    <div class="card-actions">
+                        <a href="https://live-lens.pptik.id/detail/${topic}" class="btn btn-primary btn-sm">Detail</a>
+                    </div>
                 `;
             };
             container.img.src = `${imageUrl}?t=${new Date().getTime()}`;
         }
-// <div class="card-actions">
-                    //     <a href="https://live-lens.pptik.id/detail/${topic}" class="btn btn-primary btn-sm">Detail</a>
-                    // </div>
+
         // Koneksi WebSocket
         function connectWebSocket(devices) {
             if (ws) ws.close();
