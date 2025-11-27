@@ -1,560 +1,946 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kamera RW 13 Sekeloa 2025</title>
-    <link rel="icon" href="logo.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Monitoring RW 13 Sekeloa | Command Center</title>
+    <link rel="icon" href="https://pptik.id/wp-content/uploads/2024/05/cropped-512x512-1-32x32.png" type="image/x-icon">
+    <!-- Menggunakan Font Inter agar lebih modern & tech-look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
-            --dark-color: #1e3163;
-            --light-color: #f8f9fa;
-            --text-color: #2b2d42;
-            --text-light: #8d99ae;
-            --success-color: #4cc9f0;
-            --warning-color: #f8961e;
-            --danger-color: #f72585;
-            --border-radius: 12px;
-            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            /* Palette Warna Profesional (Slate & Royal Blue) */
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            
+            /* Effects */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Global styles */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--light-color);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            color: var(--text-color);
-            line-height: 1.6;
         }
 
+        /* --- Header Modern Glassmorphism --- */
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            width: 100%;
-            padding: 15px 30px;
-            box-shadow: var(--box-shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
             position: fixed;
             top: 0;
             left: 0;
+            width: 100%;
             z-index: 1000;
-            backdrop-filter: blur(10px);
+            height: 70px;
+            transition: var(--transition);
         }
 
-        .header-content {
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
         }
 
-        header img {
-            height: 45px;
+        .brand img {
+            height: 40px;
             width: auto;
-            border-radius: 50%;
-            border: 2px solid white;
         }
 
-        header h1 {
-            font-size: 1.5rem;
-            margin: 0;
-            font-weight: 600;
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
+        /* --- Buttons & Controls --- */
         .btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 10px 20px;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 0.9rem;
-            font-weight: 500;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
             cursor: pointer;
-            text-decoration: none;
             transition: var(--transition);
-            white-space: nowrap;
+            border: none;
+            outline: none;
+            text-decoration: none;
         }
 
         .btn-primary {
-            background-color: var(--accent-color);
+            background-color: var(--primary);
             color: white;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
         }
 
         .btn-primary:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-outline {
-            background-color: transparent;
-            color: white;
-            border: 2px solid white;
+            background-color: white;
+            border: 1px solid var(--border);
+            color: var(--text-main);
         }
 
         .btn-outline:hover {
-            background-color: white;
-            color: var(--primary-color);
-            transform: translateY(-2px);
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: #eff6ff;
+        }
+        
+        .btn-back {
+            color: var(--text-muted);
+            background: transparent;
+            padding-left: 0;
+        }
+        
+        .btn-back:hover {
+            color: var(--primary);
+            transform: translateX(-4px);
         }
 
         .btn-sm {
             padding: 6px 12px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
 
-        #main-content {
+        .btn i {
+            font-size: 0.9em;
+        }
+
+        /* --- Main Layout --- */
+        main {
             flex: 1;
-            width: 100%;
-            padding-top: 80px;
-            padding-bottom: 30px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .container {
-            width: 100%;
+            padding-top: 100px; /* Offset for fixed header */
+            padding-bottom: 40px;
+            padding-left: 20px;
+            padding-right: 20px;
             max-width: 1400px;
-            padding: 0 20px;
-        }
-
-        .page-header {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .page-header h2 {
-            font-size: 1.8rem;
-            color: var(--dark-color);
-            margin-bottom: 10px;
-        }
-
-        .page-header p {
-            color: var(--text-light);
-            max-width: 700px;
             margin: 0 auto;
+            width: 100%;
+            position: relative;
         }
 
-        #images-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
+        /* Utility for Views */
+        .view-section {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.4s ease-out;
             width: 100%;
         }
 
-        .image-card {
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .dashboard-title h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .dashboard-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        /* --- Grid System --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        /* --- Camera Card Design --- */
+        .cam-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cam-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+            border-color: #cbd5e1;
+        }
+
+        /* Container gambar dengan rasio 16:9 */
+        .cam-view {
             position: relative;
             width: 100%;
-            height: 250px;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #0f172a; /* Dark bg saat loading */
             overflow: hidden;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            background-color: white;
+            cursor: pointer;
         }
-
-        .image-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .image-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .image-card:hover img {
+        
+        .cam-view:hover .cam-image {
             transform: scale(1.03);
         }
 
-        .card-overlay {
+        .cam-image {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-            padding: 20px;
-            color: white;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .card-text {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-
-        .card-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 5px;
-        }
-
-        .loading-indicator {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.8);
-            z-index: 2;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .loading-indicator.active {
-            opacity: 1;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(67, 97, 238, 0.2);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s linear infinite;
-        }
-
-        #loading-overlay {
-            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            object-fit: cover;
+            transition: transform 0.5s ease, opacity 0.3s ease;
+        }
+        
+        /* Placeholder untuk skeleton/error */
+        .cam-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            transition: var(--transition);
-            opacity: 0;
-            visibility: hidden;
-            gap: 20px;
+            color: #475569;
+            z-index: 0;
         }
 
-        #loading-overlay.active {
-            opacity: 1;
-            visibility: visible;
+        .cam-placeholder i {
+            font-size: 2rem;
+            margin-bottom: 8px;
         }
 
-        .loading-text {
+        /* Live Indicator di pojok gambar */
+        .cam-live-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(220, 38, 38, 0.9);
             color: white;
-            font-size: 1.2rem;
-            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        footer {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            width: 100%;
-            padding: 20px;
-            text-align: center;
-            color: white;
-            margin-top: auto;
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
+        .cam-info {
+            padding: 16px;
+            background: white;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            justify-content: space-between;
         }
 
-        .footer-links {
+        .cam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .cam-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .cam-location {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cam-actions {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .update-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-variant-numeric: tabular-nums; /* Agar angka tidak bergeser */
+        }
+
+        /* --- History Page Styles --- */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .history-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .history-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .history-card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background-color: #f1f5f9;
+        }
+
+        .history-card-body {
+            padding: 12px 16px;
+        }
+
+        .history-date-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: #eff6ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .history-timestamp {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .history-ago {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .history-header-meta {
+            margin-top: 8px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .loading-state {
+            grid-column: 1 / -1;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--text-muted);
+            background: white;
+            border-radius: var(--radius);
+            border: 1px dashed var(--border);
+        }
+
+        /* --- Skeleton Loading Animation --- */
+        .skeleton {
+            background: #e2e8f0;
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 4px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* --- Footer --- */
+        footer {
+            margin-top: auto;
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 24px 0;
+            text-align: center;
+        }
+
+        .footer-content p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* --- Fullscreen Loader --- */
+        #initial-loader {
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 9999;
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 10px;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--primary);
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: rotation 1s linear infinite;
+            margin-bottom: 16px;
         }
 
-        .footer-links a {
-            color: white;
-            text-decoration: none;
-            transition: var(--transition);
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        .footer-links a:hover {
-            color: var(--accent-color);
-            text-decoration: underline;
-        }
-
-        .copyright {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        @media (max-width: 992px) {
-            #images-container {
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            }
-            
-            header h1 {
-                font-size: 1.3rem;
-            }
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            header {
-                padding: 12px 20px;
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .header-content {
-                flex-direction: column;
-                gap: 5px;
-            }
-            
-            #main-content {
-                padding-top: 120px;
-            }
-            
-            .page-header h2 {
-                font-size: 1.5rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            #images-container {
+            .grid-container {
                 grid-template-columns: 1fr;
             }
-            
-            .image-card {
-                height: 220px;
-            }
-            
-            .btn {
-                padding: 8px 15px;
-                font-size: 0.8rem;
-            }
-            
-            .footer-links {
+            .dashboard-header {
                 flex-direction: column;
-                gap: 8px;
+                align-items: flex-start;
+            }
+            .brand-text h1 {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 
 <body>
+
+    <!-- Initial Loading Screen -->
+    <div id="initial-loader">
+        <div class="loader-spinner"></div>
+        <p style="color: var(--text-muted); font-weight: 500;">Menghubungkan ke CCTV...</p>
+    </div>
+
     <header>
-        <div class="header-content">
-            <img src="logo.png" alt="RW 13 Logo">
-            <h1>Kamera RW 13 Sekeloa</h1>
-        </div>
-        <div class="header-actions">
-            <!-- <a href="https://hylab-result.pptik.id/" class="btn btn-outline">View Results</a> -->
-            <button class="btn btn-primary" id="refresh-btn">Refresh</button>
+        <div class="header-container">
+            <div class="brand" onclick="navigateToDashboard()">
+                <!-- Fallback logo jika gambar tidak ada -->
+                <img src="https://pptik.id/wp-content/uploads/2024/05/cropped-512x512-1-32x32.png" alt="Logo" onerror="this.style.display='none'">
+                <div class="brand-text">
+                    <h1>RW 13 Sekeloa</h1>
+                    <span>Smart Monitoring System</span>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-primary" id="refresh-btn">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+            </div>
         </div>
     </header>
 
-    <div id="loading-overlay">
-        <div class="spinner"></div>
-        <div class="loading-text">Memuat kamera...</div>
-    </div>
-
-    <div id="main-content">
-        <div class="container">
-            <div class="page-header">
-                <h2>Monitoring CCTV RW 13 Sekeloa</h2>
-                <p>Pantau lokasi sekitar RW 13 Sekeloa secara real-time melalui kamera CCTV berikut</p>
+    <main>
+        
+        <!-- === VIEW: DASHBOARD === -->
+        <div id="view-dashboard" class="view-section active">
+            <div class="dashboard-header">
+                <div class="dashboard-title">
+                    <h2>Live Monitoring</h2>
+                    <p>Pantau keamanan lingkungan secara real-time dari kamera CCTV aktif.</p>
+                </div>
+                <div class="status-badge">
+                    <div class="pulse-dot"></div>
+                    Sistem Online
+                </div>
             </div>
-            <div id="images-container">
-                <!-- Images will be loaded here -->
+
+            <div id="images-container" class="grid-container">
+                <!-- Cards will be injected here via JS -->
+                <!-- Skeleton Example (akan dihapus oleh JS) -->
+                <div class="cam-card skeleton-card">
+                    <div class="cam-view skeleton" style="height: 220px;"></div>
+                    <div class="cam-info">
+                        <div class="skeleton" style="height: 20px; width: 70%; margin-bottom: 10px;"></div>
+                        <div class="skeleton" style="height: 15px; width: 40%;"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+
+        <!-- === VIEW: HISTORY === -->
+        <div id="view-history" class="view-section">
+            <div style="margin-bottom: 20px;">
+                <button class="btn btn-back" onclick="navigateToDashboard()">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+                </button>
+            </div>
+            
+            <div class="dashboard-title">
+                <h2 id="history-title">Riwayat Kamera</h2>
+                <div id="history-subtitle" class="history-header-meta">Memuat informasi...</div>
+            </div>
+
+            <div id="history-container" class="history-grid">
+                <!-- History Items injected here -->
+            </div>
+        </div>
+
+    </main>
 
     <footer>
         <div class="footer-content">
-            <div class="footer-links">
-                <a href="#">Kebijakan Privasi</a>
-                <a href="#">Syarat & Ketentuan</a>
-                <a href="#">Kontak Kami</a>
-            </div>
-            <div class="copyright">&copy; 2025 RW 13 Sekeloa Bandung. All rights reserved.</div>
+            <p>&copy; 2025 RW 13 Sekeloa Bandung & PUSTEKHAN ITB. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        let ws = null;
         const imageContainers = {};
-        const loadingOverlay = document.getElementById('loading-overlay');
-        const refreshBtn = document.getElementById('refresh-btn');
+        let ws = null;
+        
+        // DOM Elements
+        const viewDashboard = document.getElementById('view-dashboard');
+        const viewHistory = document.getElementById('view-history');
         const imagesContainer = document.getElementById('images-container');
+        const historyContainer = document.getElementById('history-container');
+        const initialLoader = document.getElementById('initial-loader');
+        const refreshBtn = document.getElementById('refresh-btn');
+        
+        // State
+        let currentView = 'dashboard'; // 'dashboard' | 'history'
+        let currentHistoryGuid = null;
 
-        // Fungsi untuk mengambil data perangkat dari API
+        // URL Default Placeholder
+        const PLACEHOLDER_IMG = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20600%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_18%20text%20%7B%20fill%3A%23AAAAAA%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_18%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23EEEEEE%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22270%22%20y%3D%22315%22%3ENo%20Signal%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E';
+
+        // --- NAVIGATION LOGIC ---
+
+        function navigateToDashboard() {
+            currentView = 'dashboard';
+            currentHistoryGuid = null;
+            
+            viewHistory.classList.remove('active');
+            // Sedikit delay agar transisi lebih smooth
+            setTimeout(() => {
+                viewHistory.style.display = 'none';
+                viewDashboard.style.display = 'block';
+                // Trigger reflow
+                void viewDashboard.offsetWidth; 
+                viewDashboard.classList.add('active');
+            }, 50);
+            
+            // Scroll to top
+            window.scrollTo(0,0);
+        }
+
+        function navigateToHistory(guid, name) {
+            currentView = 'history';
+            currentHistoryGuid = guid;
+
+            // Update Header info
+            document.getElementById('history-title').textContent = `Riwayat: ${name}`;
+            document.getElementById('history-subtitle').textContent = `ID Perangkat: ${guid} | Menampilkan 10 data terakhir`;
+
+            // Switch View
+            viewDashboard.classList.remove('active');
+            setTimeout(() => {
+                viewDashboard.style.display = 'none';
+                viewHistory.style.display = 'block';
+                void viewHistory.offsetWidth; 
+                viewHistory.classList.add('active');
+            }, 50);
+
+            // Set Loading & Fetch
+            renderHistoryLoading();
+            fetchHistory(guid);
+            
+            // Scroll to top
+            window.scrollTo(0,0);
+        }
+
+        function handleRefresh() {
+            if (currentView === 'dashboard') {
+                initApp(); // Reload full app data
+            } else if (currentView === 'history' && currentHistoryGuid) {
+                // Animasi icon
+                const icon = refreshBtn.querySelector('i');
+                if(icon) icon.classList.add('fa-spin');
+                
+                // Refresh data history saja
+                fetchHistory(currentHistoryGuid).then(() => {
+                     if(icon) setTimeout(() => icon.classList.remove('fa-spin'), 500);
+                });
+            }
+        }
+
+        // --- HELPER FUNCTIONS ---
+
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return new Intl.DateTimeFormat('id-ID', {
+                weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            }).format(date);
+        }
+        
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " tahun lalu";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " bulan lalu";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " hari lalu";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " jam lalu";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " menit lalu";
+            return Math.floor(seconds) + " detik lalu";
+        }
+
+        // --- DATA FETCHING ---
+
         async function fetchDevices() {
+            const icon = refreshBtn.querySelector('i');
+            if(icon && currentView === 'dashboard') icon.classList.add('fa-spin');
+
             const url = 'https://api-iot-device.lskk.co.id/v1/devices/by-type-company?companyGuid=COMPANY-2b19d770-ac09-422e-b76f-9db22351b69d-2025&type=Camera';
             try {
                 const response = await fetch(url);
                 const data = await response.json();
+                
+                if(icon) setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+                
                 if (data.success) return data.data;
                 throw new Error('Gagal mengambil data perangkat');
             } catch (error) {
                 console.error('Error:', error);
+                if(icon) icon.classList.remove('fa-spin');
                 return [];
             }
         }
 
-        // Inisialisasi kartu CCTV berdasarkan data API
-        function initializeCards(devices) {
-            imagesContainer.innerHTML = '';
-            devices.forEach(device => {
-                const card = document.createElement('div');
-                card.className = 'image-card';
-                card.id = `card-${device.deviceGuid}`;
-                
-                const img = document.createElement('img');
-                img.src = 'placeholder.jpg';
-                img.alt = device.name;
-                
-                const loading = document.createElement('div');
-                loading.className = 'loading-indicator active';
-                loading.innerHTML = '<div class="spinner"></div>';
-                
-                const overlay = document.createElement('div');
-                overlay.className = 'card-overlay';
-                overlay.innerHTML = `
-                    <div>
-                        <div class="card-title">${device.name}</div>
-                        <div class="card-text">${device.latitude}, ${device.longitude}</div>
-                    </div>
-                    
-                `;
-                
-                card.append(img, loading, overlay);
-                imagesContainer.appendChild(card);
-                
-                imageContainers[device.deviceGuid] = {
-                    container: card,
-                    img: img,
-                    loading: loading,
-                    overlay: overlay,
-                    deviceName: device.name
-                };
-            });
-        }
-
-        // Update kartu dengan gambar terbaru
-        function updateCard(topic, imageUrl, timestamp) {
-            const container = imageContainers[topic];
-            if (!container) return;
-            
-            container.loading.classList.add('active');
-            container.img.onload = () => {
-                container.loading.classList.remove('active');
-                container.overlay.innerHTML = `
-                    <div>
-                        <div class="card-title">${container.deviceName}</div>
-                        <div class="card-text">Diperbarui: ${timestamp}</div>
-                    </div>
-                    
-                `;
-            };
-            container.img.src = `${imageUrl}?t=${new Date().getTime()}`;
-        }
-// <div class="card-actions">
-                    //     <a href="https://live-lens.pptik.id/detail/${topic}" class="btn btn-primary btn-sm">Detail</a>
-                    // </div>
-        // Koneksi WebSocket
-        function connectWebSocket(devices) {
-            if (ws) ws.close();
-            
-            loadingOverlay.classList.add('active');
-            ws = new WebSocket('wss://worker-cctv.pptik.id');
-            
-            ws.onopen = () => {
-                devices.forEach(device => {
-                    ws.send(JSON.stringify({ 
-                        action: 'subscribe', 
-                        topic: device.deviceGuid 
-                    }));
-                });
-                loadingOverlay.classList.remove('active');
-            };
-
-            ws.onmessage = (event) => {
-                const payload = JSON.parse(event.data);
-                updateCard(
-                    payload.guid_device,
-                    `https://smartparking.pptik.id/data/data/${payload.value}`,
-                    payload.datetime
-                );
-            };
-
-            ws.onclose = () => setTimeout(() => connectWebSocket(devices), 5000);
-            ws.onerror = (error) => console.error('WebSocket Error:', error);
-        }
-
-        // Refresh data dan tampilan
-        async function refreshData() {
-            loadingOverlay.classList.add('active');
+        async function fetchHistory(guid) {
+            const url = `https://hydro-connect.pptik.id/api/api.v1/devices/data/1/10/${guid}`;
             try {
-                const devices = await fetchDevices();
-                if (devices.length === 0) throw new Error('Tidak ada perangkat ditemukan');
-                initializeCards(devices);
-                connectWebSocket(devices);
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.status && data.history && data.history.length > 0) {
+                    renderHistoryList(data.history);
+                } else {
+                    historyContainer.innerHTML = `
+                        <div class="loading-state">
+                            <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 16px; color: #cbd5e1;"></i>
+                            <p style="font-size: 1.1rem; font-weight: 500;">Tidak ada riwayat data ditemukan.</p>
+                            <p style="font-size: 0.9rem;">Belum ada rekaman gambar untuk perangkat ini.</p>
+                        </div>
+                    `;
+                }
             } catch (error) {
-                console.error('Refresh Error:', error);
-                loadingOverlay.querySelector('.loading-text').textContent = error.message;
+                console.error("Error fetching history:", error);
+                historyContainer.innerHTML = `
+                    <div class="loading-state">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 16px; color: var(--danger);"></i>
+                        <p style="font-size: 1.1rem; font-weight: 500;">Gagal memuat data.</p>
+                        <button class="btn btn-primary btn-sm" style="margin-top: 10px;" onclick="fetchHistory('${guid}')">Coba Lagi</button>
+                    </div>
+                `;
             }
         }
 
-        // Inisialisasi awal
-        document.addEventListener('DOMContentLoaded', refreshData);
-        refreshBtn.addEventListener('click', refreshData);
+        // --- RENDERING ---
+
+        function createCard(device) {
+            const col = document.createElement('div');
+            col.innerHTML = `
+                <div class="cam-card" id="card-${device.deviceGuid}">
+                    <div class="cam-view" onclick="navigateToHistory('${device.deviceGuid}', '${device.name}')">
+                        <div class="cam-live-badge"><i class="fas fa-circle" style="font-size: 6px;"></i> LIVE</div>
+                        <div class="cam-placeholder">
+                            <i class="fas fa-video-slash"></i>
+                            <span>Menunggu Data...</span>
+                        </div>
+                        <img class="cam-image" id="img-${device.deviceGuid}" 
+                             src="${PLACEHOLDER_IMG}" 
+                             alt="${device.name}"
+                             style="opacity: 0;">
+                    </div>
+                    <div class="cam-info">
+                        <div>
+                            <div class="cam-header">
+                                <h3 class="cam-title" title="${device.name}">${device.name}</h3>
+                            </div>
+                            <div class="cam-location">
+                                <i class="fas fa-map-marker-alt" style="color: var(--primary);"></i>
+                                <span>${Number(device.latitude).toFixed(5)}, ${Number(device.longitude).toFixed(5)}</span>
+                            </div>
+                        </div>
+                        <div class="cam-actions">
+                            <div class="update-time" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">
+                                <i class="far fa-clock"></i>
+                                <span id="time-${device.deviceGuid}">Menunggu...</span>
+                            </div>
+                            <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="navigateToHistory('${device.deviceGuid}', '${device.name}')">
+                                <i class="fas fa-history"></i> Lihat Riwayat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return col.firstElementChild;
+        }
+
+        function initializeCards(devices) {
+            imagesContainer.innerHTML = '';
+            
+            if (devices.length === 0) {
+                imagesContainer.innerHTML = '<div class="loading-state"><p>Tidak ada perangkat ditemukan.</p></div>';
+                return;
+            }
+
+            devices.forEach(device => {
+                const card = createCard(device);
+                imagesContainer.appendChild(card);
+                
+                imageContainers[device.deviceGuid] = {
+                    img: document.getElementById(`img-${device.deviceGuid}`),
+                    time: document.getElementById(`time-${device.deviceGuid}`),
+                    container: card
+                };
+            });
+        }
+        
+        function renderHistoryLoading() {
+            let skeletonHTML = '';
+            // Generate 8 skeleton items
+            for(let i=0; i<8; i++) {
+                skeletonHTML += `
+                <div class="history-card">
+                    <div class="history-card-img skeleton"></div>
+                    <div class="history-card-body">
+                        <div class="skeleton" style="height: 16px; width: 40%; margin-bottom: 8px;"></div>
+                        <div class="skeleton" style="height: 20px; width: 80%;"></div>
+                        <div class="skeleton" style="height: 14px; width: 60%; margin-top: 4px;"></div>
+                    </div>
+                </div>`;
+            }
+            historyContainer.innerHTML = skeletonHTML;
+        }
+        
+        function renderHistoryList(historyData) {
+            let html = '';
+            
+            historyData.forEach(item => {
+                const imageUrl = `https://smartparking.pptik.id/data/data/${item.value}`;
+                const dateObj = item.createdAt || item.datetime;
+                
+                html += `
+                    <div class="history-card" onclick="window.open('${imageUrl}', '_blank')">
+                        <img src="${imageUrl}" class="history-card-img" loading="lazy" alt="History Image" onerror="this.src='${PLACEHOLDER_IMG}'">
+                        <div class="history-card-body">
+                            <div class="history-date-badge"><i class="far fa-calendar-alt"></i> ${new Date(dateObj).toLocaleDateString('id-ID')}</div>
+                            <div class="history-timestamp">${new Date(dateObj).toLocaleTimeString('id-ID')}</div>
+                            <div class="history-ago"><i class="far fa-clock"></i> ${timeAgo(dateObj)}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyContainer.innerHTML = html;
+        }
+
+        // --- REALTIME UPDATES ---
+
+        function updateCard(topic, imageUrl, timestamp) {
+            const target = imageContainers[topic];
+            if (!target) return;
+
+            const tempImg = new Image();
+            tempImg.onload = () => {
+                target.img.src = tempImg.src;
+                target.img.style.opacity = '1'; 
+                // Simple formatting for Dashboard card
+                const date = new Date(timestamp);
+                const timeStr = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(date);
+                target.time.textContent = `Live: ${timeStr}`;
+                target.time.style.color = 'var(--success)';
+                target.time.style.fontWeight = '600';
+            };
+            // Bypass cache
+            tempImg.src = `${imageUrl}?t=${new Date().getTime()}`;
+        }
+
+        function connectWebSocket(devices) {
+            if (ws) ws.close();
+            
+            ws = new WebSocket('wss://worker-cctv.pptik.id');
+            
+            ws.onopen = () => {
+                console.log('Connected to WebSocket');
+                devices.forEach(device => {
+                    ws.send(JSON.stringify({ action: 'subscribe', topic: device.deviceGuid }));
+                });
+            };
+
+            ws.onmessage = (event) => {
+                try {
+                    const payload = JSON.parse(event.data);
+                    if(payload.guid_device && payload.value) {
+                        updateCard(
+                            payload.guid_device,
+                            `https://smartparking.pptik.id/data/data/${payload.value}`,
+                            payload.datetime
+                        );
+                    }
+                } catch (e) {
+                    console.error('Parse error', e);
+                }
+            };
+
+            ws.onclose = () => {
+                setTimeout(() => connectWebSocket(devices), 3000);
+            };
+            
+            ws.onerror = (error) => console.error('WebSocket Error:', error);
+        }
+
+        async function initApp() {
+            try {
+                const devices = await fetchDevices();
+                initializeCards(devices);
+                connectWebSocket(devices);
+                
+                setTimeout(() => {
+                    initialLoader.style.opacity = '0';
+                    setTimeout(() => {
+                        initialLoader.style.display = 'none';
+                    }, 500);
+                }, 800);
+
+            } catch (error) {
+                console.error(error);
+                initialLoader.innerHTML = `<p style="color:red">Gagal memuat sistem. Periksa koneksi internet.</p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initApp);
+        refreshBtn.addEventListener('click', handleRefresh);
+
     </script>
-
 </body>
-
 </html>
