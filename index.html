@@ -117,13 +117,20 @@
             text-decoration: none;
         }
 
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #cbd5e1;
+            color: var(--text-muted);
+        }
+
         .btn-primary {
             background-color: var(--primary);
             color: white;
             box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
         }
 
-        .btn-primary:hover {
+        .btn-primary:not(:disabled):hover {
             background-color: var(--primary-dark);
             transform: translateY(-1px);
         }
@@ -134,7 +141,7 @@
             color: var(--text-main);
         }
 
-        .btn-outline:hover {
+        .btn-outline:not(:disabled):hover {
             border-color: var(--primary);
             color: var(--primary);
             background-color: #eff6ff;
@@ -526,6 +533,17 @@
             border-radius: var(--radius);
             border: 1px dashed var(--border);
         }
+        
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 32px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
 
         /* --- Skeleton Loading Animation --- */
         .skeleton {
@@ -702,7 +720,7 @@
                     <input type="time" id="filter-end-time" class="form-control">
                 </div>
                 <div class="form-group" style="flex: 0;">
-                    <button class="btn btn-primary" onclick="applyHistoryFilter()" style="height: 38px;">
+                    <button class="btn btn-primary" onclick="applyHistoryFilter(true)" style="height: 38px;">
                         <i class="fas fa-filter"></i> Terapkan
                     </button>
                 </div>
@@ -710,6 +728,17 @@
 
             <div id="history-container" class="history-grid">
                 <!-- History Items injected here -->
+            </div>
+
+            <!-- Pagination Controls -->
+            <div id="pagination-controls" class="pagination-container" style="display: none;">
+                <button class="btn btn-outline" id="prev-page-btn" onclick="changePage(-1)" disabled>
+                    <i class="fas fa-chevron-left"></i> Sebelumnya
+                </button>
+                <span id="page-indicator" style="font-weight: 600; color: var(--text-muted); min-width: 100px; text-align: center;">Halaman 1</span>
+                <button class="btn btn-outline" id="next-page-btn" onclick="changePage(1)" disabled>
+                    Selanjutnya <i class="fas fa-chevron-right"></i>
+                </button>
             </div>
         </div>
 
@@ -733,6 +762,12 @@
         const initialLoader = document.getElementById('initial-loader');
         const refreshBtn = document.getElementById('refresh-btn');
         
+        // Pagination Elements
+        const paginationControls = document.getElementById('pagination-controls');
+        const prevPageBtn = document.getElementById('prev-page-btn');
+        const nextPageBtn = document.getElementById('next-page-btn');
+        const pageIndicator = document.getElementById('page-indicator');
+
         // Filter Inputs
         const filterStartDate = document.getElementById('filter-start-date');
         const filterStartTime = document.getElementById('filter-start-time');
@@ -748,6 +783,8 @@
         let currentHistoryGuid = null;
         let currentHistoryName = '';
         let currentHistoryMode = 'cctv'; // 'cctv' | 'ai'
+        let currentPage = 1;
+        let hasMoreData = false;
         
         // Config AI
         const AI_COMPANY_GUID = 'COMPANY-0a3a303e-7dd0-4246-ad21-d675e77904b4-2024';
@@ -785,8 +822,10 @@
             // Set Default Dates Filters
             setDefaultFilterDates();
 
-            // Reset Tab to CCTV by default
+            // Reset Tab to CCTV by default, Reset Page
             switchHistoryTab('cctv', false);
+            currentPage = 1;
+            updatePaginationUI();
 
             // Switch View
             viewDashboard.classList.remove('active');
@@ -797,6 +836,9 @@
                 viewHistory.classList.add('active');
             }, 50);
 
+            // Fetch Initial Data
+            applyHistoryFilter(true);
+
             window.scrollTo(0,0);
         }
 
@@ -804,7 +846,7 @@
             if (currentView === 'dashboard') {
                 initApp(); // Reload full app data
             } else if (currentView === 'history' && currentHistoryGuid) {
-                applyHistoryFilter();
+                applyHistoryFilter(false); // Refresh current view/page
             }
         }
 
@@ -822,8 +864,25 @@
             }
 
             if (autoFetch) {
-                applyHistoryFilter();
+                applyHistoryFilter(true); // Reset to page 1 on tab switch
             }
+        }
+
+        // --- PAGINATION LOGIC ---
+
+        function changePage(delta) {
+            const newPage = currentPage + delta;
+            if (newPage < 1) return;
+            
+            currentPage = newPage;
+            updatePaginationUI();
+            applyHistoryFilter(false); // Fetch w/o resetting page
+        }
+
+        function updatePaginationUI() {
+            pageIndicator.textContent = `Halaman ${currentPage}`;
+            prevPageBtn.disabled = currentPage <= 1;
+            nextPageBtn.disabled = !hasMoreData;
         }
 
         // --- FILTER HELPERS ---
@@ -848,7 +907,7 @@
             filterEndDate.value = toDateStr(now);
             filterEndTime.value = toTimeStr(now);
             
-            filterStartDate.value = toDateStr(oneHourAgo); // Start date usually today unless around midnight
+            filterStartDate.value = toDateStr(oneHourAgo); 
             filterStartTime.value = toTimeStr(oneHourAgo);
         }
 
@@ -861,14 +920,20 @@
             };
         }
 
-        function applyHistoryFilter() {
+        function applyHistoryFilter(resetPage = false) {
             const filters = getFilterValues();
             if (!filters.startDate || !filters.endDate) {
                 alert("Mohon isi tanggal mulai dan selesai.");
                 return;
             }
+
+            if (resetPage) {
+                currentPage = 1;
+                updatePaginationUI();
+            }
             
             renderHistoryLoading();
+            paginationControls.style.display = 'none'; // Hide while loading
             
             const icon = refreshBtn.querySelector('i');
             if(icon) icon.classList.add('fa-spin');
@@ -908,14 +973,11 @@
 
         // 1. FETCH LOG FAST (CCTV RAW)
         async function fetchLogFast(guid, filters) {
-            // Construct URL
             const limit = 20;
-            const page = 1;
-            // Endpoint: https://api-iot-log.lskk.co.id/v1/data/log-fast
             const url = new URL('https://api-iot-log.lskk.co.id/v1/data/log-fast');
             url.searchParams.append('guid_device', guid);
             url.searchParams.append('limit', limit);
-            url.searchParams.append('page', page);
+            url.searchParams.append('page', currentPage);
             url.searchParams.append('startDate', filters.startDate);
             url.searchParams.append('endDate', filters.endDate);
             url.searchParams.append('startTime', filters.startTime || '00:00');
@@ -927,7 +989,20 @@
 
                 if (data.success && data.data && data.data.data && data.data.data.length > 0) {
                     renderHistoryList(data.data.data);
+                    
+                    // Logic Pagination for Log Fast
+                    // If 'hasMore' provided in data.data or check if data length equals limit
+                    if (data.data.hasMore !== undefined) {
+                         hasMoreData = data.data.hasMore;
+                    } else {
+                        // Fallback logic
+                        hasMoreData = data.data.data.length === limit;
+                    }
+                    
+                    paginationControls.style.display = 'flex';
+                    updatePaginationUI();
                 } else {
+                    hasMoreData = false;
                     showHistoryEmpty();
                 }
             } catch (error) {
@@ -938,25 +1013,13 @@
 
         // 2. FETCH AI REPORTS
         async function fetchAIReports(guidDevice, filters) {
-            // Endpoint: https://api-iot-log.lskk.co.id/v1/reports/company
-            // Note: Filter AI API does not support startTime/endTime natively in the same way as log-fast usually, 
-            // but based on prompt we focus on the specific AI URL structure. 
-            // The prompt example URL for AI doesn't show date filters in the example string, 
-            // but usually APIs support it. Since prompt only showed specific params, we try to add date params if supported,
-            // or we just fetch the latest page.
-            
-            // Assuming standard pagination parameters.
-            
+            const limit = 12;
             const url = new URL('https://api-iot-log.lskk.co.id/v1/reports/company');
             url.searchParams.append('companyGuid', AI_COMPANY_GUID);
             url.searchParams.append('type', 'AIProcessing-yolov8');
-            url.searchParams.append('page', 1);
-            url.searchParams.append('limit', 12);
+            url.searchParams.append('page', currentPage);
+            url.searchParams.append('limit', limit);
             url.searchParams.append('guidDevice', guidDevice);
-            
-            // Attempt to use date filters if the API supports it (common pattern)
-            // url.searchParams.append('startDate', filters.startDate);
-            // url.searchParams.append('endDate', filters.endDate);
 
             try {
                 const response = await fetch(url);
@@ -964,7 +1027,19 @@
 
                 if (data.success && data.data && data.data.data && data.data.data.length > 0) {
                     renderAIHistoryList(data.data.data);
+                    
+                    // Logic Pagination for AI
+                    // Response has totalPages
+                    if (data.data.totalPages) {
+                        hasMoreData = currentPage < data.data.totalPages;
+                    } else {
+                        hasMoreData = data.data.data.length === limit;
+                    }
+
+                    paginationControls.style.display = 'flex';
+                    updatePaginationUI();
                 } else {
+                    hasMoreData = false;
                     showHistoryEmpty();
                 }
             } catch (error) {
@@ -1060,9 +1135,6 @@
                 const imageUrl = `${RAW_IMG_BASE_URL}${item.value}`;
                 const dateObj = item.datetime; // String format "DD-MM-YYYY HH:mm:ss" usually
                 
-                // Parsing custom date string if necessary, but assuming JS can display string directly or parse standard format
-                // API format in prompt: "28-11-2025 08:27:17". new Date() might not parse DD-MM-YYYY in all browsers.
-                // Let's safe parse manually
                 let dateDisplay = item.datetime;
                 let timeAgoDisplay = '';
                 
@@ -1144,6 +1216,7 @@
                     <p style="font-size: 0.9rem;">Coba ubah filter tanggal atau jam.</p>
                 </div>
             `;
+            paginationControls.style.display = 'none';
         }
 
         function showHistoryError() {
@@ -1151,9 +1224,10 @@
                 <div class="loading-state">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 16px; color: var(--danger);"></i>
                     <p style="font-size: 1.1rem; font-weight: 500;">Gagal memuat data.</p>
-                    <button class="btn btn-primary btn-sm" style="margin-top: 10px;" onclick="applyHistoryFilter()">Coba Lagi</button>
+                    <button class="btn btn-primary btn-sm" style="margin-top: 10px;" onclick="applyHistoryFilter(true)">Coba Lagi</button>
                 </div>
             `;
+            paginationControls.style.display = 'none';
         }
 
         // --- HELPER TIME AGO ---
