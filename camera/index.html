@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring RW 13 Sekeloa | Command Center</title>
+    <title>Monitoring CCTV | Command Center</title>
     <link rel="icon" href="https://pptik.id/wp-content/uploads/2024/05/cropped-512x512-1-32x32.png" type="image/x-icon">
     <!-- Menggunakan Font Inter agar lebih modern & tech-look -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             /* Palette Warna Profesional (Slate & Royal Blue) */
@@ -22,7 +22,7 @@
             --border: #e2e8f0;
             --success: #10b981;
             --danger: #ef4444;
-            
+
             /* Effects */
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -142,13 +142,13 @@
             color: var(--primary);
             background-color: #eff6ff;
         }
-        
+
         .btn-back {
             color: var(--text-muted);
             background: transparent;
             padding-left: 0;
         }
-        
+
         .btn-back:hover {
             color: var(--primary);
             transform: translateX(-4px);
@@ -166,7 +166,8 @@
         /* --- Main Layout --- */
         main {
             flex: 1;
-            padding-top: 100px; /* Offset for fixed header */
+            padding-top: 100px;
+            /* Offset for fixed header */
             padding-bottom: 40px;
             padding-left: 20px;
             padding-right: 20px;
@@ -178,7 +179,8 @@
 
         /* Utility for Views */
         .view-section {
-            display: none; /* Hidden by default */
+            display: none;
+            /* Hidden by default */
             animation: fadeIn 0.4s ease-out;
             width: 100%;
         }
@@ -188,8 +190,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .dashboard-header {
@@ -254,6 +263,23 @@
             flex-direction: column;
         }
 
+        /* Animasi saat kartu muncul */
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .cam-card-visible {
+            animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         .cam-card:hover {
             box-shadow: var(--shadow-lg);
             transform: translateY(-4px);
@@ -264,12 +290,14 @@
         .cam-view {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            background-color: #0f172a; /* Dark bg saat loading */
+            padding-top: 56.25%;
+            /* 16:9 Aspect Ratio */
+            background-color: #0f172a;
+            /* Dark bg saat loading */
             overflow: hidden;
             cursor: pointer;
         }
-        
+
         .cam-view:hover .cam-image {
             transform: scale(1.03);
         }
@@ -283,7 +311,7 @@
             object-fit: cover;
             transition: transform 0.5s ease, opacity 0.3s ease;
         }
-        
+
         /* Placeholder untuk skeleton/error */
         .cam-placeholder {
             position: absolute;
@@ -318,7 +346,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             z-index: 10;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             gap: 4px;
@@ -369,10 +397,86 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            font-variant-numeric: tabular-nums; /* Agar angka tidak bergeser */
+            font-variant-numeric: tabular-nums;
+            /* Agar angka tidak bergeser */
         }
 
         /* --- History Page Styles --- */
+        .history-controls {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background-color: #fff;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .history-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: var(--text-main);
+        }
+
         .history-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -386,6 +490,7 @@
             border: 1px solid var(--border);
             transition: var(--transition);
             cursor: pointer;
+            position: relative;
         }
 
         .history-card:hover {
@@ -426,14 +531,22 @@
             color: var(--text-muted);
             margin-top: 2px;
         }
-        
-        .history-header-meta {
+
+        .ai-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
             margin-top: 8px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 24px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
+        }
+
+        .ai-tag {
+            font-size: 0.7rem;
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
         }
 
         .loading-state {
@@ -446,6 +559,19 @@
             border: 1px dashed var(--border);
         }
 
+        .waiting-state {
+            grid-column: 1 / -1;
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0.8;
+        }
+
         /* --- Skeleton Loading Animation --- */
         .skeleton {
             background: #e2e8f0;
@@ -456,14 +582,41 @@
         }
 
         @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
+        }
+
+        @keyframes pulse-text {
+            0% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
         }
 
         /* --- Footer --- */
@@ -492,7 +645,7 @@
             flex-direction: column;
             transition: opacity 0.5s ease;
         }
-        
+
         .loader-spinner {
             width: 48px;
             height: 48px;
@@ -504,8 +657,13 @@
         }
 
         @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Responsive */
@@ -513,12 +671,19 @@
             .grid-container {
                 grid-template-columns: 1fr;
             }
+
             .dashboard-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .brand-text h1 {
                 font-size: 1rem;
+            }
+
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
             }
         }
     </style>
@@ -536,9 +701,10 @@
         <div class="header-container">
             <div class="brand" onclick="navigateToDashboard()">
                 <!-- Fallback logo jika gambar tidak ada -->
-                <img src="https://pptik.id/wp-content/uploads/2024/05/cropped-512x512-1-32x32.png" alt="Logo" onerror="this.style.display='none'">
+                <img src="https://pptik.id/wp-content/uploads/2024/05/cropped-512x512-1-32x32.png" alt="Logo"
+                    onerror="this.style.display='none'">
                 <div class="brand-text">
-                    <h1>RW 13 Sekeloa</h1>
+                    <h1>SMART CAMERA</h1>
                     <span>Smart Monitoring System</span>
                 </div>
             </div>
@@ -551,7 +717,7 @@
     </header>
 
     <main>
-        
+
         <!-- === VIEW: DASHBOARD === -->
         <div id="view-dashboard" class="view-section active">
             <div class="dashboard-header">
@@ -567,14 +733,6 @@
 
             <div id="images-container" class="grid-container">
                 <!-- Cards will be injected here via JS -->
-                <!-- Skeleton Example (akan dihapus oleh JS) -->
-                <div class="cam-card skeleton-card">
-                    <div class="cam-view skeleton" style="height: 220px;"></div>
-                    <div class="cam-info">
-                        <div class="skeleton" style="height: 20px; width: 70%; margin-bottom: 10px;"></div>
-                        <div class="skeleton" style="height: 15px; width: 40%;"></div>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -585,10 +743,48 @@
                     <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
                 </button>
             </div>
-            
+
             <div class="dashboard-title">
                 <h2 id="history-title">Riwayat Kamera</h2>
                 <div id="history-subtitle" class="history-header-meta">Memuat informasi...</div>
+            </div>
+
+            <!-- Filters -->
+            <div class="history-controls">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="filter-start-date">Tanggal Mulai</label>
+                        <input type="date" id="filter-start-date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-end-date">Tanggal Selesai</label>
+                        <input type="date" id="filter-end-date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-start">Jam Mulai</label>
+                        <input type="time" id="filter-start" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-end">Jam Selesai</label>
+                        <input type="time" id="filter-end" class="form-control">
+                    </div>
+                    <div class="form-group" style="flex: 0;">
+                        <button class="btn btn-primary" style="height: 42px; margin-top: auto;"
+                            onclick="applyHistoryFilter()">
+                            <i class="fas fa-filter"></i> Terapkan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="history-tabs">
+                <button class="tab-btn active" id="tab-regular" onclick="switchTab('regular')">
+                    <i class="far fa-image"></i> Log Gambar
+                </button>
+                <button class="tab-btn" id="tab-ai" onclick="switchTab('ai')">
+                    <i class="fas fa-brain"></i> Log AI Detection
+                </button>
             </div>
 
             <div id="history-container" class="history-grid">
@@ -600,14 +796,17 @@
 
     <footer>
         <div class="footer-content">
-            <p>&copy; 2025 RW 13 Sekeloa Bandung & PUSTEKHAN ITB. All rights reserved.</p>
+            <p>&copy; 2025 PT. Langgeng Sejahtera Kreasi Komputasi & PUSTEKHAN ITB. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
         const imageContainers = {};
         let ws = null;
-        
+
+        // --- KONFIGURASI API ---
+        const API_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJndWlkIjoiVVNFUi05YjVkM2I4Ni1lZDFhLTQzMGUtOTFmNy05ODJhZDk1MDYzZGQtMjAyNCIsIm5hbWUiOiJMU0tLIERFVkVMT1BFUiIsImd1aWRBcHBsaWNhdGlvbiI6IlBST0pFQ1QtNTE5MzkxYTEtYmZmNi00ZThjLWE4NTQtYmVkMzk4NGNjMGJiLTIwMjQiLCJyb2xlIjoiYWRtaW4iLCJjb21wYW55R3VpZCI6IkNPTVBBTlktMGEzYTMwM2UtN2RkMC00MjQ2LWFkMjEtZDY3NWU3NzkwNGI0LTIwMjQiLCJpYXQiOjE3NTg1MDYzMTgsImV4cCI6MTkxNjI3MjcxOH0.GgPJXEtdQio2riUDvn9S5jV537enecMwzJE1okBpvao';
+
         // DOM Elements
         const viewDashboard = document.getElementById('view-dashboard');
         const viewHistory = document.getElementById('view-history');
@@ -615,151 +814,218 @@
         const historyContainer = document.getElementById('history-container');
         const initialLoader = document.getElementById('initial-loader');
         const refreshBtn = document.getElementById('refresh-btn');
-        
+
+        // Inputs
+        const filterStartDate = document.getElementById('filter-start-date');
+        const filterEndDate = document.getElementById('filter-end-date');
+        const filterStart = document.getElementById('filter-start');
+        const filterEnd = document.getElementById('filter-end');
+        const tabRegular = document.getElementById('tab-regular');
+        const tabAI = document.getElementById('tab-ai');
+
         // State
-        let currentView = 'dashboard'; // 'dashboard' | 'history'
+        let currentView = 'dashboard';
         let currentHistoryGuid = null;
+        let currentHistoryCompanyGuid = null;
+        let currentHistoryTab = 'regular'; // 'regular' | 'ai'
 
         // URL Default Placeholder
-        const PLACEHOLDER_IMG = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20600%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_18%20text%20%7B%20fill%3A%23AAAAAA%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_18%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23EEEEEE%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22270%22%20y%3D%22315%22%3ENo%20Signal%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E';
+        const PLACEHOLDER_IMG = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22800%22%20height%3D%22600%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20800%20600%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_18%20text%20%7B%20fill%3A%23AAAAAA%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A40pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_18%22%3E%3Crect%20width%3D%22800%22%20height%3D%22600%22%20fill%3D%22%23EEEEEE%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22270%22%20y%3D%22315%22%3ENo%20Signal%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fsvg%3E';
 
         // --- NAVIGATION LOGIC ---
 
         function navigateToDashboard() {
             currentView = 'dashboard';
             currentHistoryGuid = null;
-            
+
             viewHistory.classList.remove('active');
-            // Sedikit delay agar transisi lebih smooth
             setTimeout(() => {
                 viewHistory.style.display = 'none';
                 viewDashboard.style.display = 'block';
-                // Trigger reflow
-                void viewDashboard.offsetWidth; 
+                void viewDashboard.offsetWidth;
                 viewDashboard.classList.add('active');
             }, 50);
-            
-            // Scroll to top
-            window.scrollTo(0,0);
+
+            window.scrollTo(0, 0);
         }
 
-        function navigateToHistory(guid, name) {
+        function navigateToHistory(guid, name, companyGuid) {
             currentView = 'history';
             currentHistoryGuid = guid;
+            currentHistoryCompanyGuid = companyGuid;
 
-            // Update Header info
+            // Set Default Filters (Today, 1 hour window)
+            const now = new Date();
+            const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000));
+
+            const todayStr = now.toISOString().split('T')[0];
+            filterStartDate.value = todayStr;
+            filterEndDate.value = todayStr;
+
+            // Format HH:mm
+            const formatTime = (date) => {
+                return date.getHours().toString().padStart(2, '0') + ':' +
+                    date.getMinutes().toString().padStart(2, '0');
+            };
+
+            filterEnd.value = formatTime(now);
+            filterStart.value = formatTime(oneHourAgo);
+
             document.getElementById('history-title').textContent = `Riwayat: ${name}`;
-            document.getElementById('history-subtitle').textContent = `ID Perangkat: ${guid} | Menampilkan 10 data terakhir`;
+            document.getElementById('history-subtitle').textContent = `ID Perangkat: ${guid}`;
 
-            // Switch View
             viewDashboard.classList.remove('active');
             setTimeout(() => {
                 viewDashboard.style.display = 'none';
                 viewHistory.style.display = 'block';
-                void viewHistory.offsetWidth; 
+                void viewHistory.offsetWidth;
                 viewHistory.classList.add('active');
             }, 50);
 
-            // Set Loading & Fetch
-            renderHistoryLoading();
-            fetchHistory(guid);
-            
-            // Scroll to top
-            window.scrollTo(0,0);
+            // Reset Tab to Regular
+            switchTab('regular', false); // false = jangan fetch dulu, biarkan applyHistoryFilter yg handle
+
+            applyHistoryFilter();
+            window.scrollTo(0, 0);
+        }
+
+        function switchTab(tab, autoFetch = true) {
+            currentHistoryTab = tab;
+
+            if (tab === 'regular') {
+                tabRegular.classList.add('active');
+                tabAI.classList.remove('active');
+            } else {
+                tabRegular.classList.remove('active');
+                tabAI.classList.add('active');
+            }
+
+            if (autoFetch && currentHistoryGuid) {
+                applyHistoryFilter();
+            }
         }
 
         function handleRefresh() {
             if (currentView === 'dashboard') {
-                initApp(); // Reload full app data
+                initApp();
             } else if (currentView === 'history' && currentHistoryGuid) {
-                // Animasi icon
-                const icon = refreshBtn.querySelector('i');
-                if(icon) icon.classList.add('fa-spin');
-                
-                // Refresh data history saja
-                fetchHistory(currentHistoryGuid).then(() => {
-                     if(icon) setTimeout(() => icon.classList.remove('fa-spin'), 500);
-                });
+                applyHistoryFilter();
+            }
+        }
+
+        function applyHistoryFilter() {
+            if (!currentHistoryGuid) return;
+
+            renderHistoryLoading();
+
+            if (currentHistoryTab === 'regular') {
+                fetchRegularHistory(currentHistoryGuid);
+            } else {
+                fetchAIHistory(currentHistoryGuid, currentHistoryCompanyGuid);
             }
         }
 
         // --- HELPER FUNCTIONS ---
 
-        function formatDate(dateString) {
-            if (!dateString) return '-';
-            const date = new Date(dateString);
-            return new Intl.DateTimeFormat('id-ID', {
-                weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
-                hour: '2-digit', minute: '2-digit', second: '2-digit'
-            }).format(date);
-        }
-        
         function timeAgo(dateString) {
             const date = new Date(dateString);
             const now = new Date();
             const seconds = Math.floor((now - date) / 1000);
-            
+
             let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + " tahun lalu";
+            if (interval > 1) return Math.floor(interval) + " thn lalu";
             interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + " bulan lalu";
+            if (interval > 1) return Math.floor(interval) + " bln lalu";
             interval = seconds / 86400;
             if (interval > 1) return Math.floor(interval) + " hari lalu";
             interval = seconds / 3600;
             if (interval > 1) return Math.floor(interval) + " jam lalu";
             interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + " menit lalu";
-            return Math.floor(seconds) + " detik lalu";
+            if (interval > 1) return Math.floor(interval) + " mnt lalu";
+            return Math.floor(seconds) + " dtk lalu";
         }
 
         // --- DATA FETCHING ---
 
         async function fetchDevices() {
             const icon = refreshBtn.querySelector('i');
-            if(icon && currentView === 'dashboard') icon.classList.add('fa-spin');
+            if (icon && currentView === 'dashboard') icon.classList.add('fa-spin');
 
-            const url = 'https://api-iot-device.lskk.co.id/v1/devices/by-type-company?companyGuid=COMPANY-2b19d770-ac09-422e-b76f-9db22351b69d-2025&type=Camera';
+            const url = 'https://api-iot-device.lskk.co.id/v1/devices/by-type?type=Camera';
+
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${API_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
                 const data = await response.json();
-                
-                if(icon) setTimeout(() => icon.classList.remove('fa-spin'), 1000);
-                
-                if (data.success) return data.data;
-                throw new Error('Gagal mengambil data perangkat');
+
+                if (icon) setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+
+                if (data.success) {
+                    return data.data;
+                }
+                throw new Error(data.message || 'Gagal mengambil data perangkat');
             } catch (error) {
                 console.error('Error:', error);
-                if(icon) icon.classList.remove('fa-spin');
+                if (icon) icon.classList.remove('fa-spin');
                 return [];
             }
         }
 
-        async function fetchHistory(guid) {
-            const url = `https://hydro-connect.pptik.id/api/api.v1/devices/data/1/10/${guid}`;
+        async function fetchRegularHistory(guid) {
+            // Params
+            const startDate = filterStartDate.value;
+            const endDate = filterEndDate.value;
+            const start = filterStart.value;
+            const end = filterEnd.value;
+
+            // NOTE: Authorization header REMOVED for this endpoint as requested
+            const url = `https://api-iot-log.lskk.co.id/v1/data/log-fast?guid_device=${guid}&limit=20&startDate=${startDate}&endDate=${endDate}&startTime=${start}&endTime=${end}&page=1`;
+
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                
-                if (data.status && data.history && data.history.length > 0) {
-                    renderHistoryList(data.history);
+
+                // Parse: data.data.data
+                // First data is the object wrapper, second data is the array
+                const historyItems = (data.data && data.data.data) ? data.data.data : [];
+
+                if (historyItems.length > 0) {
+                    renderRegularHistory(historyItems);
                 } else {
-                    historyContainer.innerHTML = `
-                        <div class="loading-state">
-                            <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 16px; color: #cbd5e1;"></i>
-                            <p style="font-size: 1.1rem; font-weight: 500;">Tidak ada riwayat data ditemukan.</p>
-                            <p style="font-size: 0.9rem;">Belum ada rekaman gambar untuk perangkat ini.</p>
-                        </div>
-                    `;
+                    showEmptyState("Tidak ada riwayat gambar pada rentang waktu ini.");
                 }
             } catch (error) {
-                console.error("Error fetching history:", error);
-                historyContainer.innerHTML = `
-                    <div class="loading-state">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 16px; color: var(--danger);"></i>
-                        <p style="font-size: 1.1rem; font-weight: 500;">Gagal memuat data.</p>
-                        <button class="btn btn-primary btn-sm" style="margin-top: 10px;" onclick="fetchHistory('${guid}')">Coba Lagi</button>
-                    </div>
-                `;
+                console.error("Error fetching regular history:", error);
+                showErrorState();
+            }
+        }
+
+        async function fetchAIHistory(guid) {
+
+            // NOTE: Authorization header REMOVED for this endpoint as requested (same domain)
+            const url = `https://api-iot-log.lskk.co.id/v1/reports/company?companyGuid=COMPANY-0a3a303e-7dd0-4246-ad21-d675e77904b4-2024&type=AIProcessing-yolov8&page=1&limit=20&guidDevice=${guid}`;
+
+            try {
+                const response = await fetch(url);
+                const result = await response.json();
+
+                // Parse: result.data.data (Array of items)
+                const items = (result.data && result.data.data) ? result.data.data : [];
+
+                if (items.length > 0) {
+                    renderAIHistory(items);
+                } else {
+                    showEmptyState("Tidak ada data deteksi AI ditemukan.");
+                }
+            } catch (error) {
+                console.error("Error fetching AI history:", error);
+                showErrorState();
             }
         }
 
@@ -767,9 +1033,10 @@
 
         function createCard(device) {
             const col = document.createElement('div');
+            // MODIFIED: Pass companyGuid to navigateToHistory
             col.innerHTML = `
-                <div class="cam-card" id="card-${device.deviceGuid}">
-                    <div class="cam-view" onclick="navigateToHistory('${device.deviceGuid}', '${device.name}')">
+                <div class="cam-card" id="card-${device.deviceGuid}" style="display: none;">
+                    <div class="cam-view" onclick="navigateToHistory('${device.deviceGuid}', '${device.name}', '${device.companyGuid}')">
                         <div class="cam-live-badge"><i class="fas fa-circle" style="font-size: 6px;"></i> LIVE</div>
                         <div class="cam-placeholder">
                             <i class="fas fa-video-slash"></i>
@@ -793,9 +1060,9 @@
                         <div class="cam-actions">
                             <div class="update-time" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">
                                 <i class="far fa-clock"></i>
-                                <span id="time-${device.deviceGuid}">Menunggu...</span>
+                                <span id="time-${device.deviceGuid}">Menunggu Signal...</span>
                             </div>
-                            <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="navigateToHistory('${device.deviceGuid}', '${device.name}')">
+                            <button class="btn btn-outline btn-sm" style="width: 100%; justify-content: center;" onclick="navigateToHistory('${device.deviceGuid}', '${device.name}', '${device.companyGuid}')">
                                 <i class="fas fa-history"></i> Lihat Riwayat
                             </button>
                         </div>
@@ -807,16 +1074,25 @@
 
         function initializeCards(devices) {
             imagesContainer.innerHTML = '';
-            
+
             if (devices.length === 0) {
                 imagesContainer.innerHTML = '<div class="loading-state"><p>Tidak ada perangkat ditemukan.</p></div>';
                 return;
             }
 
+            const waitingMsg = document.createElement('div');
+            waitingMsg.id = 'waiting-stream-msg';
+            waitingMsg.className = 'waiting-state';
+            waitingMsg.innerHTML = `
+                <i class="fas fa-satellite-dish fa-spin" style="font-size: 2rem; color: var(--primary);"></i>
+                <p style="animation: pulse-text 2s infinite;">Menunggu aktivitas stream dari perangkat...</p>
+            `;
+            imagesContainer.appendChild(waitingMsg);
+
             devices.forEach(device => {
                 const card = createCard(device);
                 imagesContainer.appendChild(card);
-                
+
                 imageContainers[device.deviceGuid] = {
                     img: document.getElementById(`img-${device.deviceGuid}`),
                     time: document.getElementById(`time-${device.deviceGuid}`),
@@ -824,11 +1100,10 @@
                 };
             });
         }
-        
+
         function renderHistoryLoading() {
             let skeletonHTML = '';
-            // Generate 8 skeleton items
-            for(let i=0; i<8; i++) {
+            for (let i = 0; i < 8; i++) {
                 skeletonHTML += `
                 <div class="history-card">
                     <div class="history-card-img skeleton"></div>
@@ -841,27 +1116,76 @@
             }
             historyContainer.innerHTML = skeletonHTML;
         }
-        
-        function renderHistoryList(historyData) {
+
+        function renderRegularHistory(items) {
             let html = '';
-            
-            historyData.forEach(item => {
+            items.forEach(item => {
                 const imageUrl = `https://smartparking.pptik.id/data/data/${item.value}`;
-                const dateObj = item.createdAt || item.datetime;
-                
+                // Fallback date handling depending on API
+                const dateObj = new Date(item.create_at || item.datetime || item.timestamp * 1000);
+
                 html += `
                     <div class="history-card" onclick="window.open('${imageUrl}', '_blank')">
-                        <img src="${imageUrl}" class="history-card-img" loading="lazy" alt="History Image" onerror="this.src='${PLACEHOLDER_IMG}'">
+                        <img src="${imageUrl}" class="history-card-img" loading="lazy" alt="Regular Log" onerror="this.src='${PLACEHOLDER_IMG}'">
                         <div class="history-card-body">
-                            <div class="history-date-badge"><i class="far fa-calendar-alt"></i> ${new Date(dateObj).toLocaleDateString('id-ID')}</div>
-                            <div class="history-timestamp">${new Date(dateObj).toLocaleTimeString('id-ID')}</div>
+                            <div class="history-date-badge"><i class="far fa-calendar-alt"></i> ${dateObj.toLocaleDateString('id-ID')}</div>
+                            <div class="history-timestamp">${dateObj.toLocaleTimeString('id-ID')}</div>
                             <div class="history-ago"><i class="far fa-clock"></i> ${timeAgo(dateObj)}</div>
                         </div>
                     </div>
                 `;
             });
-            
             historyContainer.innerHTML = html;
+        }
+
+        function renderAIHistory(items) {
+            let html = '';
+            items.forEach(item => {
+                const imageUrl = item.imageUrl;
+                const dateObj = new Date(item.datetime || item.create_at);
+
+                // Generate detection tags
+                let tagsHtml = '';
+                if (item.counts) {
+                    for (const [key, value] of Object.entries(item.counts)) {
+                        if (value > 0) {
+                            tagsHtml += `<span class="ai-tag">${key}: ${value}</span>`;
+                        }
+                    }
+                }
+                if (!tagsHtml) tagsHtml = '<span class="ai-tag" style="background:#f1f5f9; color:#64748b; border-color:#e2e8f0;">No Objects</span>';
+
+                html += `
+                    <div class="history-card" onclick="window.open('${imageUrl}', '_blank')">
+                        <img src="${imageUrl}" class="history-card-img" loading="lazy" alt="AI Log" onerror="this.src='${PLACEHOLDER_IMG}'">
+                        <div class="history-card-body">
+                            <div class="history-date-badge" style="background:#e0e7ff; color:#4338ca;"><i class="fas fa-robot"></i> AI Detect</div>
+                            <div class="history-timestamp">${dateObj.toLocaleTimeString('id-ID')} - ${dateObj.toLocaleDateString('id-ID')}</div>
+                            <div class="ai-tags">${tagsHtml}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            historyContainer.innerHTML = html;
+        }
+
+        function showEmptyState(msg) {
+            historyContainer.innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-box-open" style="font-size: 3rem; margin-bottom: 16px; color: #cbd5e1;"></i>
+                    <p style="font-size: 1.1rem; font-weight: 500;">${msg}</p>
+                </div>
+            `;
+        }
+
+        function showErrorState() {
+            historyContainer.innerHTML = `
+                <div class="loading-state">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 16px; color: var(--danger);"></i>
+                    <p style="font-size: 1.1rem; font-weight: 500;">Gagal memuat data.</p>
+                    <button class="btn btn-primary btn-sm" style="margin-top: 10px;" onclick="applyHistoryFilter()">Coba Lagi</button>
+                </div>
+            `;
         }
 
         // --- REALTIME UPDATES ---
@@ -872,24 +1196,29 @@
 
             const tempImg = new Image();
             tempImg.onload = () => {
+                if (target.container.style.display === 'none') {
+                    const waitingMsg = document.getElementById('waiting-stream-msg');
+                    if (waitingMsg) waitingMsg.style.display = 'none';
+
+                    target.container.style.display = 'flex';
+                    target.container.classList.add('cam-card-visible');
+                }
+
                 target.img.src = tempImg.src;
-                target.img.style.opacity = '1'; 
-                // Simple formatting for Dashboard card
-                // const date = new Date(timestamp);
-                // const timeStr = new Intl.DateTimeFormat('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(date);
+                target.img.style.opacity = '1';
+
                 target.time.textContent = `Live: ${timestamp}`;
                 target.time.style.color = 'var(--success)';
                 target.time.style.fontWeight = '600';
             };
-            // Bypass cache
             tempImg.src = `${imageUrl}?t=${new Date().getTime()}`;
         }
 
         function connectWebSocket(devices) {
             if (ws) ws.close();
-            
+
             ws = new WebSocket('wss://worker-cctv.pptik.id');
-            
+
             ws.onopen = () => {
                 console.log('Connected to WebSocket');
                 devices.forEach(device => {
@@ -900,7 +1229,7 @@
             ws.onmessage = (event) => {
                 try {
                     const payload = JSON.parse(event.data);
-                    if(payload.guid_device && payload.value) {
+                    if (payload.guid_device && payload.value) {
                         updateCard(
                             payload.guid_device,
                             `https://smartparking.pptik.id/data/data/${payload.value}`,
@@ -915,7 +1244,7 @@
             ws.onclose = () => {
                 setTimeout(() => connectWebSocket(devices), 3000);
             };
-            
+
             ws.onerror = (error) => console.error('WebSocket Error:', error);
         }
 
@@ -924,7 +1253,7 @@
                 const devices = await fetchDevices();
                 initializeCards(devices);
                 connectWebSocket(devices);
-                
+
                 setTimeout(() => {
                     initialLoader.style.opacity = '0';
                     setTimeout(() => {
@@ -943,4 +1272,5 @@
 
     </script>
 </body>
+
 </html>
